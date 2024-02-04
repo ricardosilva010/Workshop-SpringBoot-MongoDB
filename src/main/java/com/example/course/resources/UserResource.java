@@ -1,5 +1,6 @@
 package com.example.course.resources;
 
+import com.example.course.domain.Post;
 import com.example.course.domain.User;
 import com.example.course.dto.UserDTO;
 import com.example.course.services.UserService;
@@ -31,8 +32,7 @@ public class UserResource
     public ResponseEntity<UserDTO> findById(@PathVariable String id)
     {
         User user = userService.findById(id);
-        UserDTO userDTO = new UserDTO(user);
-        return ResponseEntity.ok().body(userDTO);
+        return ResponseEntity.ok().body(new UserDTO(user));
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -58,5 +58,12 @@ public class UserResource
         user.setId(id);
         user = userService.update(user);
         return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/{id}/posts", method = RequestMethod.GET)
+    public ResponseEntity<List<Post>> findPosts(@PathVariable String id)
+    {
+        User user = userService.findById(id);
+        return ResponseEntity.ok().body(user.getPosts());
     }
 }
